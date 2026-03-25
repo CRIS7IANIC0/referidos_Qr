@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import QRCodeWrapper from "./QRCodeWrapper";
+import { headers } from "next/headers";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -21,7 +22,15 @@ export default async function DashboardPage() {
   const hasReward = consumedReferralsCount >= 4;
   
   // Dynamic host for the QR code
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  
+  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!baseUrl || baseUrl === "http://localhost:3000") {
+    baseUrl = `${protocol}://${host}`;
+  }
+
   const referralLink = `${baseUrl}/register-referral?code=${user.referralCode}`;
 
   return (
