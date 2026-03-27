@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: "Peluquería - Referidos QR",
@@ -17,6 +18,7 @@ export default function RootLayout({
         <main className="app-container">
           {children}
         </main>
+        <SpeedInsights />
       </body>
     </html>
   );
